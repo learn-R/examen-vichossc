@@ -1,7 +1,7 @@
 ---
-title: "Conflicto y Cohesion Social"
-author: "Vicente Godoy"
-date: "2022-11-30"
+title: "Inseguridad Social"
+author: "Profesora Valentina Andrade/ Ayudante Dafne Vargas/ Estudiante Vicente Godoy"
+date: "2022-12-05"
 output: html_document
 ---
 
@@ -34,6 +34,11 @@ En definitiva,
 #f05_07:	Justificacion de violencia: Estudiantes tiren piedras a carabineros
 #c05_03:	Grado de confianza: Carabineros
 #m0_edad:	Edad del entrevistado
+
+### **Bibliografa**
+
+Luneke Reyes, Alejandra. (2021). Inseguridad urbana, participación ciudadana y cuidado vecinal: la búsqueda por protección en los barrios. Revista INVI, 36(102), 302-327. https://dx.doi.org/10.4067/S0718-83582021000200302
+
 
 T?tulo, Abstract (100-150 palabras), Introducci?n (200-250 palabras), An?lisis (300-500 palabras), Conclusi?n (150-200 palabras) y Referencias. Debe indicar su nombre, profesora y ayudantes
 

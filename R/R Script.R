@@ -9,7 +9,7 @@ pacman::p_load(tidyverse,
                sjPlot,
                sjmisc)
 
-data <- read_stata("input/ELSOC_W05_v1.0_Stata13.dta")
+data <- read_stata("input/ELSOC_W05_v1.0_Stata14.dta")
 
 # Selección de variables y objeto encuesta --------------------------------
 
@@ -33,10 +33,14 @@ objeto_encuesta <- data.selecto %>%
 table(data.selecto$t10, exclude=F)
 table(data.selecto$f01_05, exclude=F)
 
+data.selecto$t10 <- na_if(data.selecto$t10, -666)
+data.selecto$t10 <- na_if(data.selecto$t10, -999)
+
+data.selecto$f01_05 <- na_if(data.selecto$f01_05, -999)
+data.selecto$f01_05 <- na_if(data.selecto$f01_05, -888)
+
 plot_frq(data.selecto$f01_05)
 plot_frq(data.selecto$t10)
-
-
 
 data.selecto <- mutate(data.selecto, t10 = case_when(t10 %in% c(1,2 )~"Inseguro",
                                                  t10 %in% c(4, 5)~"Seguro",
@@ -47,12 +51,6 @@ data.selecto <- mutate(data.selecto, f01_05 = case_when(
   f01_05>=4 & f01_05<=5~"Conflcitos mayores", 
   f01_05==1~"Ningun conflicto"))
 
-data.selecto$t10 <- na_if(data.selecto$t10, -666)
-data.selecto$t10 <- na_if(data.selecto$t10, -888)
-data.selecto$t10 <- na_if(data.selecto$t10, -999)
-
-data.selecto$f01_05 <- na_if(data.selecto$f01_05, -999)
-data.selecto$f01_05 <- na_if(data.selecto$f01_05, -888)
 
 objeto_encuesta %>%
   group_by(f01_05, t10) %>%
@@ -73,10 +71,12 @@ save_plot("output/Graficos/Correlacion inseguridad y conflicto.png", fig = last_
 # Correlacion inseguridad y justificacion de la violencia -----------------
 
 table(data.selecto$f05_07, exclude=F)
-plot_frq(data.selecto$f05_07)
 
 data.selecto$f05_07 <- na_if(data.selecto$f05_07, -999)
-data.selecto$f05_07<- na_if(data.selecto$f05_07, -888)
+data.selecto$f05_07 <- na_if(data.selecto$f05_07, -888)
+
+plot_frq(data.selecto$f05_07)
+
 
 data.selecto <- mutate(data.selecto, f05_07 = case_when(
  f05_07>=2 & f05_07<=3~"En ocasiones se justifica", 
@@ -100,14 +100,17 @@ save_plot("output/Graficos/Correlacion inseguridad y justificacion de la violenc
 # Correlacion inseguridad y Confianza en Carabineros ----------------------
 
 table(data.selecto$c05_03, exclude=F)
+
+data.selecto$c05_03 <- na_if(data.selecto$c05_03, -999)
+data.selecto$c05_03 <- na_if(data.selecto$c05_03, -888)
+data.selecto$c05_03 <- na_if(data.selecto$c05_03, -666)
+
 plot_frq(data.selecto$c05_03)
 
-                            
 data.selecto <- mutate(data.selecto, c05_03 = case_when(
   c05_03>=2 & c05_03<=3~"Algo", 
   c05_03>=4 & c05_03<=5~"Bastante", 
   c05_03==1~"Nada"))
-
 
 objeto_encuesta %>%
   group_by(c05_03, t10) %>%
@@ -123,7 +126,6 @@ plot_xtab(data.selecto$c05_03,data.selecto$t10,  margin = "row",
 
 save_plot("output/Graficos/Correlacion inseguridad y confianza.png", fig = last_plot())
 
-
 sjt.xtab(data.selecto$c05_03,data.selecto$t10,
          show.col.prc = TRUE,
          show.summary = FALSE,
@@ -133,6 +135,7 @@ sjt.xtab(data.selecto$c05_03,data.selecto$t10,
 # Correlacion inseguridad y Edad ------------------------------------------
 
 table(data.selecto$m0_edad, exclude=F)
+
 plot_frq(data.selecto$m0_edad)
 
 data.selecto <- mutate(data.selecto, m0_edad = case_when(
