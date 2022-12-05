@@ -14,7 +14,8 @@ data <- read_stata("input/ELSOC_W05_v1.0_Stata13.dta")
 # Selección de variables y objeto encuesta --------------------------------
 
 data.selecto <- select(data, fact_exp02,muestra, estrato,m0_edad, t10, c05_03, f05_07, f01_05 )
-find_var(data, "conflictos")
+
+
 objeto_encuesta <- data.selecto %>%
   as_survey_design(id = muestra,
                    strata = estrato,
@@ -27,7 +28,7 @@ objeto_encuesta <- data.selecto %>%
 #m0_edad:	Edad del entrevistado
 
 
-# Correlacion Inseguridad y Conflicto de genero -------------------------------------------------
+# Correlacion Inseguridad y Conflicto inmigrantes -------------------------------------------------
 
 table(data.selecto$t10, exclude=F)
 table(data.selecto$f01_05, exclude=F)
@@ -35,12 +36,7 @@ table(data.selecto$f01_05, exclude=F)
 plot_frq(data.selecto$f01_05)
 plot_frq(data.selecto$t10)
 
-data.selecto$t10 <- na_if(data.selecto$t10, -666)
-data.selecto$t10 <- na_if(data.selecto$t10, -888)
-data.selecto$t10 <- na_if(data.selecto$t10, -999)
 
-data.selecto$f01_02 <- na_if(data.selecto$f01_02, -999)
-data.selecto$f01_02 <- na_if(data.selecto$f01_02, -888)
 
 data.selecto <- mutate(data.selecto, t10 = case_when(t10 %in% c(1,2 )~"Inseguro",
                                                  t10 %in% c(4, 5)~"Seguro",
@@ -51,15 +47,16 @@ data.selecto <- mutate(data.selecto, f01_05 = case_when(
   f01_05>=4 & f01_05<=5~"Conflcitos mayores", 
   f01_05==1~"Ningun conflicto"))
 
-objeto_encuesta %>%
-  group_by(data.selecto$f01_05) %>%
-  summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
-  mutate(per = prop*100) %>%
-  ungroup()
+data.selecto$t10 <- na_if(data.selecto$t10, -666)
+data.selecto$t10 <- na_if(data.selecto$t10, -888)
+data.selecto$t10 <- na_if(data.selecto$t10, -999)
+
+data.selecto$f01_05 <- na_if(data.selecto$f01_05, -999)
+data.selecto$f01_05 <- na_if(data.selecto$f01_05, -888)
 
 objeto_encuesta %>%
-  group_by(data.selecto$t10) %>%
-  summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
+  group_by(f01_05, t10) %>%
+  summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = TRUE)) %>%
   mutate(per = prop*100) %>%
   ungroup()
 
@@ -87,7 +84,7 @@ data.selecto <- mutate(data.selecto, f05_07 = case_when(
  f05_07==1~"Nunca se justifica"))
 
 objeto_encuesta %>%
-  group_by(data.selecto$f05_07) %>%
+  group_by(f05_07, t10) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
   mutate(per = prop*100) %>%
   ungroup()
@@ -107,13 +104,13 @@ plot_frq(data.selecto$c05_03)
 
                             
 data.selecto <- mutate(data.selecto, c05_03 = case_when(
-  c05_03>=2 & f05_07<=3~"Algo", 
-  c05_03>=4 & f05_07<=5~"Bastante", 
+  c05_03>=2 & c05_03<=3~"Algo", 
+  c05_03>=4 & c05_03<=5~"Bastante", 
   c05_03==1~"Nada"))
 
 
 objeto_encuesta %>%
-  group_by(data.selecto$c05_03) %>%
+  group_by(c05_03, t10) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
   mutate(per = prop*100) %>%
   ungroup()
@@ -144,7 +141,7 @@ data.selecto <- mutate(data.selecto, m0_edad = case_when(
   m0_edad>=60 & m0_edad<=92~"Adulto mayor"))
 
 objeto_encuesta %>%
-  group_by(data.selecto$m0_edad) %>%
+  group_by(m0_edad, t10) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
   mutate(per = prop*100) %>%
   ungroup()

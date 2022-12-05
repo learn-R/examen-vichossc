@@ -3,7 +3,7 @@
     "path": "C:/Users/Usuario/OneDrive/Escritorio/Universidad/4to semestre/R/examen-vichossc/rmark.Rmd",
     "project_path": "rmark.Rmd",
     "type": "r_markdown",
-    "hash": "0",
+    "hash": "914555398",
     "contents": "",
     "dirty": false,
     "created": 1669776018565.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "29,15",
-        "scrollLine": "24"
+        "cursorPosition": "15,134",
+        "scrollLine": "13"
     },
     "folds": "",
-    "lastKnownWriteTime": 1670121808,
+    "lastKnownWriteTime": 1670205580,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1670121808050,
+    "last_content_update": 1670205580682,
     "read_only": false,
     "read_only_alternatives": []
 }
