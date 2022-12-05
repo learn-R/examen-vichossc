@@ -15,6 +15,7 @@ data <- read_stata("input/ELSOC_W05_v1.0_Stata14.dta")
 
 data.selecto <- select(data, fact_exp02,muestra, estrato,m0_edad, t10, c05_03, f05_07, f01_05 )
 
+names(data.selecto) = c("fact_exp02", "muestra", "estrato", "edad", "inseguridad", "confianza_car", "just_violencia", "conflicto_inm")
 
 objeto_encuesta <- data.selecto %>%
   as_survey_design(id = muestra,
@@ -30,36 +31,36 @@ objeto_encuesta <- data.selecto %>%
 
 # Correlacion Inseguridad y Conflicto inmigrantes -------------------------------------------------
 
-table(data.selecto$t10, exclude=F)
-table(data.selecto$f01_05, exclude=F)
+table(data.selecto$inseguridad, exclude=F)
+table(data.selecto$conflicto_inm, exclude=F)
 
-data.selecto$t10 <- na_if(data.selecto$t10, -666)
-data.selecto$t10 <- na_if(data.selecto$t10, -999)
+data.selecto$inseguridad <- na_if(data.selecto$inseguridad, -666)
+data.selecto$inseguridad <- na_if(data.selecto$inseguridad, -999)
 
-data.selecto$f01_05 <- na_if(data.selecto$f01_05, -999)
-data.selecto$f01_05 <- na_if(data.selecto$f01_05, -888)
+data.selecto$conflicto_inm <- na_if(data.selecto$conflicto_inm, -999)
+data.selecto$conflicto_inm <- na_if(data.selecto$conflicto_inm, -888)
 
-plot_frq(data.selecto$f01_05)
-plot_frq(data.selecto$t10)
+plot_frq(data.selecto$conflicto_inm)
+plot_frq(data.selecto$inseguridad)
 
-data.selecto <- mutate(data.selecto, t10 = case_when(t10 %in% c(1,2 )~"Inseguro",
-                                                 t10 %in% c(4, 5)~"Seguro",
-                                                 t10 %in% c(3)~"Ni seguro ni inseguro"))
+data.selecto <- mutate(data.selecto, inseguridad = case_when(inseguridad %in% c(1,2 )~"Inseguro",
+                                                 inseguridad %in% c(4, 5)~"Seguro",
+                                                 inseguridad %in% c(3)~"Ni seguro ni inseguro"))
 
-data.selecto <- mutate(data.selecto, f01_05 = case_when(
-  f01_05>=2 & f01_05<=3~"Conflictos menores", 
-  f01_05>=4 & f01_05<=5~"Conflcitos mayores", 
-  f01_05==1~"Ningun conflicto"))
+data.selecto <- mutate(data.selecto, conflicto_inm = case_when(
+  conflicto_inm>=2 & conflicto_inm<=3~"Conflictos menores", 
+  conflicto_inm>=4 & conflicto_inm<=5~"Conflcitos mayores", 
+  conflicto_inm==1~"Ningun conflicto"))
 
 
 objeto_encuesta %>%
-  group_by(f01_05, t10) %>%
+  group_by(conflicto_inm, inseguridad) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = TRUE)) %>%
   mutate(per = prop*100) %>%
   ungroup()
 
 
-plot_xtab(data.selecto$f01_05,data.selecto$t10,  margin = "row", 
+plot_xtab(data.selecto$conflicto_inm,data.selecto$inseguridad,  margin = "row", 
           bar.pos = "stack",
           title = "Correlacion inseguridad y conflicto",
           show.summary = TRUE, coord.flip = TRUE,
@@ -70,26 +71,26 @@ save_plot("output/Graficos/Correlacion inseguridad y conflicto.png", fig = last_
 
 # Correlacion inseguridad y justificacion de la violencia -----------------
 
-table(data.selecto$f05_07, exclude=F)
+table(data.selecto$just_violencia, exclude=F)
 
-data.selecto$f05_07 <- na_if(data.selecto$f05_07, -999)
-data.selecto$f05_07 <- na_if(data.selecto$f05_07, -888)
+data.selecto$just_violencia <- na_if(data.selecto$just_violencia, -999)
+data.selecto$just_violencia <- na_if(data.selecto$just_violencia, -888)
 
-plot_frq(data.selecto$f05_07)
+plot_frq(data.selecto$just_violencia)
 
 
-data.selecto <- mutate(data.selecto, f05_07 = case_when(
- f05_07>=2 & f05_07<=3~"En ocasiones se justifica", 
-  f05_07>=4 & f05_07<=5~"En general se justifica", 
- f05_07==1~"Nunca se justifica"))
+data.selecto <- mutate(data.selecto, just_violencia = case_when(
+ just_violencia>=2 & just_violencia<=3~"En ocasiones se justifica", 
+  just_violencia>=4 & just_violencia<=5~"En general se justifica", 
+ just_violencia==1~"Nunca se justifica"))
 
 objeto_encuesta %>%
-  group_by(f05_07, t10) %>%
+  group_by(just_violencia, inseguridad) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
   mutate(per = prop*100) %>%
   ungroup()
 
-plot_xtab(data.selecto$f05_07,data.selecto$t10,  margin = "row", 
+plot_xtab(data.selecto$just_violencia,data.selecto$inseguridad,  margin = "row", 
           bar.pos = "stack",
           title = "Correlacion inseguridad y justificacion de la violencia",
           show.summary = TRUE, coord.flip = TRUE,
@@ -99,26 +100,26 @@ save_plot("output/Graficos/Correlacion inseguridad y justificacion de la violenc
 
 # Correlacion inseguridad y Confianza en Carabineros ----------------------
 
-table(data.selecto$c05_03, exclude=F)
+table(data.selecto$confianza_car, exclude=F)
 
-data.selecto$c05_03 <- na_if(data.selecto$c05_03, -999)
-data.selecto$c05_03 <- na_if(data.selecto$c05_03, -888)
-data.selecto$c05_03 <- na_if(data.selecto$c05_03, -666)
+data.selecto$confianza_car <- na_if(data.selecto$confianza_car, -999)
+data.selecto$confianza_car <- na_if(data.selecto$confianza_car, -888)
+data.selecto$confianza_car <- na_if(data.selecto$confianza_car, -666)
 
-plot_frq(data.selecto$c05_03)
+plot_frq(data.selecto$confianza_car)
 
-data.selecto <- mutate(data.selecto, c05_03 = case_when(
-  c05_03>=2 & c05_03<=3~"Algo", 
-  c05_03>=4 & c05_03<=5~"Bastante", 
-  c05_03==1~"Nada"))
+data.selecto <- mutate(data.selecto, confianza_car = case_when(
+  confianza_car==1~"Nada",
+  confianza_car>=2 & confianza_car<=3~"Algo", 
+  confianza_car>=4 & confianza_car<=5~"Bastante"))
 
 objeto_encuesta %>%
-  group_by(c05_03, t10) %>%
+  group_by(confianza_car, inseguridad) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
   mutate(per = prop*100) %>%
   ungroup()
 
-plot_xtab(data.selecto$c05_03,data.selecto$t10,  margin = "row", 
+plot_xtab(data.selecto$confianza_car,data.selecto$inseguridad,  margin = "row", 
           bar.pos = "stack",
           title = "Correlacion inseguridad y confianza",
           show.summary = TRUE, coord.flip = TRUE,
@@ -126,7 +127,7 @@ plot_xtab(data.selecto$c05_03,data.selecto$t10,  margin = "row",
 
 save_plot("output/Graficos/Correlacion inseguridad y confianza.png", fig = last_plot())
 
-sjt.xtab(data.selecto$c05_03,data.selecto$t10,
+sjt.xtab(data.selecto$confianza_car,data.selecto$inseguridad,
          show.col.prc = TRUE,
          show.summary = FALSE,
          encoding= "UTF-8",
@@ -134,22 +135,23 @@ sjt.xtab(data.selecto$c05_03,data.selecto$t10,
 
 # Correlacion inseguridad y Edad ------------------------------------------
 
-table(data.selecto$m0_edad, exclude=F)
+table(data.selecto$edad, exclude=F)
 
-plot_frq(data.selecto$m0_edad)
+plot_frq(data.selecto$edad)
 
-data.selecto <- mutate(data.selecto, m0_edad = case_when(
-  m0_edad>=18 & m0_edad<=26~"Adulto joven", 
-  m0_edad>=27 & m0_edad<=59~"Adulto", 
-  m0_edad>=60 & m0_edad<=92~"Adulto mayor"))
+data.selecto <- mutate(data.selecto, edad = case_when(
+  edad>=18 & edad<=26~"Adulto joven", 
+  edad>=27 & edad<=59~"Adulto", 
+  edad>=60 & edad<=92~"Adulto mayor"))
+
 
 objeto_encuesta %>%
-  group_by(m0_edad, t10) %>%
+  group_by(edad, inseguridad) %>%
   summarise(prop = survey_prop(vartype = "ci", level = .99, na.rm = T)) %>%
   mutate(per = prop*100) %>%
   ungroup()
 
-plot_xtab(data.selecto$m0_edad, data.selecto$t10, margin = "row", 
+plot_xtab(data.selecto$edad, data.selecto$inseguridad, margin = "row", 
           bar.pos = "stack",
           title = "Correlacion inseguridad y edad",
           show.summary = TRUE, coord.flip = TRUE,
@@ -158,7 +160,7 @@ plot_xtab(data.selecto$m0_edad, data.selecto$t10, margin = "row",
 save_plot("output/Graficos/Correlacion inseguridad y edad.png", fig = last_plot())
 
 
-sjt.xtab(data.selecto$m0_edad,data.selecto$t10,
+sjt.xtab(data.selecto$edad,data.selecto$inseguridad,
          show.col.prc = TRUE,
          show.summary = FALSE,
          encoding= "UTF-8",

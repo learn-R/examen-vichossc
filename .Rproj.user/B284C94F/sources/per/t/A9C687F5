@@ -1,27 +1,27 @@
 {
-    "id": "7B4C0F87",
+    "id": "A9C687F5",
     "path": "C:/Users/Usuario/OneDrive/Escritorio/Universidad/4to semestre/R/examen-vichossc/R/R Script.R",
     "project_path": "R/R Script.R",
     "type": "r_source",
-    "hash": "3530753573",
+    "hash": "2844211104",
     "contents": "",
     "dirty": false,
-    "created": 1669835148991.0,
+    "created": 1670254201609.0,
     "source_on_save": false,
     "relative_order": 1,
     "properties": {
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "170,0",
-        "scrollLine": "158"
+        "cursorPosition": "23,0",
+        "scrollLine": "15"
     },
     "folds": "",
-    "lastKnownWriteTime": 1670211056,
+    "lastKnownWriteTime": 1670259321,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1670211056,
+    "last_content_update": 1670259322000,
     "read_only": false,
     "read_only_alternatives": []
 }
